@@ -418,7 +418,7 @@ export class MessagesClient extends TypedEmitter<MessagesClientEvents> {
 
     private StartChecker() {
         this.StopChecker();
-        this.recMessageChecker = setInterval(this.CheckLatestReceiveMessages, 900000);
+        this.recMessageChecker = setInterval(() => this.CheckLatestReceiveMessages(), 900000);
         this.recMessageCheckerSetup = Date.now();
     }
 
