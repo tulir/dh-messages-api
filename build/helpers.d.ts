@@ -7,6 +7,7 @@ export declare class HelperFunctions {
         LastMsgTimeStamp: any;
         Recipients: any;
         Avatar: string | null;
+        SupportsReplies: boolean;
     };
     private static ProcessRecipients;
     static ProcessMsgData(data: any, tempIdsSending: any): {

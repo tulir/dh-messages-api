@@ -15,7 +15,7 @@ interface MessagesClientEvents {
     'error': (el: string) => void;
     'qrcode': (el: string) => void;
     'sessiondata': (el: string) => void;
-    'messsagelist': (el: string) => void;
+    'messagelist': (el: string) => void;
     'convlist': (el: string) => void;
     'messageupdate': (el: string) => void;
     'receivemessage': (el: string) => void;
@@ -78,6 +78,10 @@ export class MessagesClient extends TypedEmitter<MessagesClientEvents> {
         ], this.googleapi);
     }
 
+    public async SendMessageNoWait({convId, senderId, tempid, text}) {
+        await this.QueueFunction(() => this.TriggerSendMessage(tempid, convId, senderId, text));
+    }
+
     public async SendMessage(convId, senderId, text) {
         var tempid = `tmp_${Math.floor(999999999999 * Math.random())}`;
         return new Promise(async (resolve, reject) =>  {
@@ -91,7 +95,7 @@ export class MessagesClient extends TypedEmitter<MessagesClientEvents> {
                 }
             });
 
-            await this.QueueFunction(() => this.TriggerSendMessage(tempid, convId, senderId, text));
+            await this.SendMessageNoWait({convId, senderId, tempid, text});
         });
     }
 
@@ -480,7 +484,7 @@ export class MessagesClient extends TypedEmitter<MessagesClientEvents> {
                             this.messageListFound = true;
                             var allmessages = chunk1.hh[1];
                             var allmessagesBetter = allmessages.map(x => (HelperFunctions.ProcessConvData(x)));
-                            this.emit('messsagelist', JSON.stringify(allmessagesBetter));
+                            this.emit('convlist', JSON.stringify(allmessagesBetter));
                             continue;
                         }
 
@@ -491,7 +495,7 @@ export class MessagesClient extends TypedEmitter<MessagesClientEvents> {
                             var allconvs = chunk0.hh[1];
                             var allconvsBetter = allconvs.map(x => (HelperFunctions.ProcessMsgData(x, this.tempIdsSending)));
 
-                            this.emit('convlist', JSON.stringify(allconvsBetter));
+                            this.emit('messagelist', JSON.stringify(allconvsBetter));
                             continue;
                         }
 
@@ -500,7 +504,7 @@ export class MessagesClient extends TypedEmitter<MessagesClientEvents> {
                             try {
                                 var allmessages = chunk3.hh[1];
                                 var allmessagesBetter = allmessages.map(x => HelperFunctions.ProcessConvData(x));
-                                this.emit('messsagelist', JSON.stringify(allmessagesBetter));
+                                this.emit('convlist', JSON.stringify(allmessagesBetter));
                                 continue;
                             } catch {}
                         }
@@ -512,7 +516,7 @@ export class MessagesClient extends TypedEmitter<MessagesClientEvents> {
                             var groups = HelperFunctions.groupBy2(allconvsBetter, 'StatusId');
                             for(var g in groups) {
                                 if(g == "100" || g == "1") {
-                                    this.emit('convlist', JSON.stringify(groups[g]));
+                                    this.emit('messagelist', JSON.stringify(groups[g]));
                                 } else {
                                     this.emit('messageupdate', JSON.stringify(groups[g]));
                                 }

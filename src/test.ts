@@ -88,7 +88,7 @@ async function Existing() {
         LogMessge("Invalid Token");
     });
 
-    messages.on('messsagelist', async m => {
+    messages.on('convlist', async m => {
         var messagesFound = JSON.parse(m);
         var retmsgData = MessagesManager.SetupMsgData(msgData, messagesFound);
         msgData = retmsgData.MessageData;
@@ -108,8 +108,8 @@ async function Existing() {
         var updateFound = JSON.parse(m);
         LogMessge("Messages Update for id - " + updateFound[0].ConvId + " - " + updateFound[0].StatusText);
     });
-    
-    messages.on('convlist', async m => {
+
+    messages.on('messagelist', async m => {
         var p; p = {};
         p.data = {};
         p.data.MessageData = msgData;

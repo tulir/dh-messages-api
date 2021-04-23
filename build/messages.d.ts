@@ -6,7 +6,7 @@ interface MessagesClientEvents {
     'error': (el: string) => void;
     'qrcode': (el: string) => void;
     'sessiondata': (el: string) => void;
-    'messsagelist': (el: string) => void;
+    'messagelist': (el: string) => void;
     'convlist': (el: string) => void;
     'messageupdate': (el: string) => void;
     'receivemessage': (el: string) => void;
@@ -26,6 +26,12 @@ export declare class MessagesClient extends TypedEmitter<MessagesClientEvents> {
     private recMessageCheckerSetup;
     GetMessages(convId: any): Promise<void>;
     Connect(): Promise<void>;
+    SendMessageNoWait({ convId, senderId, tempid, text }: {
+        convId: any;
+        senderId: any;
+        tempid: any;
+        text: any;
+    }): Promise<void>;
     SendMessage(convId: any, senderId: any, text: any): Promise<unknown>;
     Setup(sessiond: any): Promise<void>;
     DownloadFile(guid: any, key: any): Promise<string>;

@@ -14,7 +14,8 @@ export class HelperFunctions {
             UserId : data[10],
             LastMsgTimeStamp: data[4],
             Recipients: HelperFunctions.ProcessRecipients(data[19]),
-            Avatar: data[8] ? Buffer.from(data[8][2]).toString('base64') : null
+            Avatar: data[8] ? Buffer.from(data[8][2]).toString('base64') : null,
+            SupportsReplies: !data[12],
         };
 
         return datare;
