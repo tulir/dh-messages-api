@@ -623,9 +623,7 @@ export class MessagesClient extends TypedEmitter<MessagesClientEvents> {
         var httpresp;
         httpresp = await HttpFunctions.httpPostPhoneRelay(resp.protodata, googleapi);
 
-        var baserespons = HelperFunctions.getResponseBuffer(httpresp)
-        var buffer = Buffer.from(baserespons, 'base64');
-        var data = getData(buffer);
+        var data = getData(httpresp.slice(15, -8));
         var qrreqdata = data[2][3];
 
         var qrlink = await this.getQRCodeLink(qrreqdata, crypto_msg_enc_key, crypto_msg_hmac);

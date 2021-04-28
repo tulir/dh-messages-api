@@ -156,17 +156,6 @@ export class HelperFunctions {
         return new Uint8Array(b.slice(0, 32))
     }
 
-    static getResponseBuffer(httpresp) {
-        var buff = Buffer.from(httpresp);
-        var base64string = buff.toString('base64');
-        var finalistring = base64string.substring(20, base64string.length - 12);
-        if(finalistring.startsWith("Cgo")) {
-            finalistring = finalistring.substring(0, finalistring.length - 1) + "=";
-        }
-
-        return finalistring;
-    }
-
     static groupBy2(xs, prop) {
         var grouped = {};
         for (var i=0; i<xs.length; i++) {

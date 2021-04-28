@@ -28,7 +28,6 @@ export declare class HelperFunctions {
     static EncryptMessage(message: any, crypto_msg_enc_key: any, crypto_msg_hmac: any): Promise<any>;
     static li(a: any): Promise<any>;
     static fw(hmac: any, a: any): Promise<Uint8Array>;
-    static getResponseBuffer(httpresp: any): string;
     static groupBy2(xs: any, prop: any): {};
     static getKeys(): Promise<{
         crypto_msg_enc_key: Uint8Array;
