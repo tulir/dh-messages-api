@@ -388,22 +388,30 @@ export class MessagesClient extends TypedEmitter<MessagesClientEvents> {
 
         await this.CheckRefreshToken();
 
+        this.emit('debug', 'Checked refresh token');
+
         var webenc = await this.GetWebKey()
+        this.emit('debug', 'Got web key');
 
         this.sessionid = await API.GetReqId();
         var sendmessageid = await API.GetReqId();
+        this.emit('debug', 'Got request IDs');
 
         //var sendmess1;
         var sendmess1 = await this.GetSendMessage(this.sessionid, sendmessageid, 31, this.sessionData.bugle, this.sessionData.pr_tachyon_auth_token, this.googleapi, new Uint8Array(0));
         var sendmess1 = await this.GetSendMessage(this.sessionid, sendmessageid, 31, this.sessionData.bugle, this.sessionData.pr_tachyon_auth_token, this.googleapi, new Uint8Array(0));
         var sendmess2 = await this.GetSendMessage(this.sessionid, this.sessionid, 16, this.sessionData.bugle, this.sessionData.pr_tachyon_auth_token, this.googleapi, new Uint8Array(0));
-        
+
+        this.emit('debug', 'Got send message requests');
+
         this.sessionid = await API.GetReqId();
         var sendmess3id = await API.GetReqId();
         var sendmess4id = await API.GetReqId();
+        this.emit('debug', 'Got more request IDs');
         var sendmess3 = await this.SendWithMessage([16, 25, 32, 1], sendmess3id, this.sessionid, 1, this.sessionData.crypto_msg_enc_key, this.sessionData.crypto_msg_hmac, this.sessionData.bugle, this.sessionData.pr_tachyon_auth_token, this.googleapi)
         var sendmess4 = await this.SendWithMessage([16, 1], sendmess4id, this.sessionid, 1, this.sessionData.crypto_msg_enc_key, this.sessionData.crypto_msg_hmac, this.sessionData.bugle, this.sessionData.pr_tachyon_auth_token, this.googleapi)
 
+        this.emit('debug', 'Sent message requests');
         if(sendmess4) {
             var sResp = JSON.parse(sendmess4);
             
@@ -415,6 +423,7 @@ export class MessagesClient extends TypedEmitter<MessagesClientEvents> {
             }
         }
 
+        this.emit('debug', 'Connection complete');
         this.retryCount = 0;
         this.StartChecker();
         this.SendReceiveMessages();
@@ -478,6 +487,10 @@ export class MessagesClient extends TypedEmitter<MessagesClientEvents> {
                 if (chunk.guid && this.processedChunks2.indexOf(chunk.guid) < 0) {
                     try {
                         this.processedChunks2.push(chunk.guid);
+
+                        if (chunk.data[0] === 50 && chunk.data[1] === 2 && chunk.data[2] === 16 && chunk.data[3] === 1) {
+                            this.emit('error', 'Connection overridden by another instance')
+                        }
 
                         var chunk1 = await API.ChunkProcess(chunk.data);
                         if(chunk1.hh && chunk1.hh[1] && chunk1.hh[1][0] && chunk1.hh[1][0][0] && chunk1.hh[1][0][3] && chunk1.hh[1][0][3][0]) {

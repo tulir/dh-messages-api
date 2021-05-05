@@ -54,6 +54,8 @@ export class HelperFunctions {
 
         if(datare.MsgText == null) {
             datare.ImageData[6] = Buffer.from(datare.ImageData[6]).toString('base64');
+        }
+        if (datare.ImageData) {
             datare.ImageData[10] = Buffer.from(datare.ImageData[10]).toString('base64');
             datare.ImageData[11] = Buffer.from(datare.ImageData[11]).toString('base64');
         }
