@@ -24,6 +24,7 @@ export declare class MessagesClient extends TypedEmitter<MessagesClientEvents> {
     private recMessageChecker;
     private lastRecReceived;
     private recMessageCheckerSetup;
+    connected: boolean;
     GetMessages(convId: any): Promise<void>;
     Connect(): Promise<void>;
     SendMessageNoWait({ convId, senderId, tempid, text }: {

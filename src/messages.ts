@@ -35,6 +35,7 @@ export class MessagesClient extends TypedEmitter<MessagesClientEvents> {
     private recMessageChecker: any;
     private lastRecReceived: any;
     private recMessageCheckerSetup: any;
+    public connected = false;
 
     public async GetMessages(convId) {
         this.emit('debug', "Triggering new messages for convid - " + convId);
@@ -113,6 +114,7 @@ export class MessagesClient extends TypedEmitter<MessagesClientEvents> {
         })
 
         this.on('error', async m => {
+            this.connected = false;
             this.emit('debug', "Error (no retries - " + this.retryCount + ") - " + m);
 
             this.StopChecker();
@@ -424,6 +426,7 @@ export class MessagesClient extends TypedEmitter<MessagesClientEvents> {
         }
 
         this.emit('debug', 'Connection complete');
+        this.connected = true;
         this.retryCount = 0;
         this.StartChecker();
         this.SendReceiveMessages();
